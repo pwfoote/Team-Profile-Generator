@@ -8,9 +8,9 @@ describe("Manager", () => {
         it("Creates object with Manager role, name, id, email, office number", () => {
             const manager = new Manager ("Jon Snow", 6, "jsnow@thewall.com", 22);
 
-            expect(manager).toBeInstanceOf(Manger);
+            expect(manager).toBeInstanceOf(Manager);
             expect(manager.name).toEqual("Jon Snow");
-            expect(manger.id).toEqual(6);
+            expect(manager.id).toEqual(6);
             expect(manager.email).toEqual("jsnow@thewall.com");
             expect(manager.officeNumber).toEqual(22);
         });
@@ -49,7 +49,7 @@ describe("Manager", () => {
     });
 
     describe("getRole", () => {
-        it("should return team role property", () => {
+        it("should return team role property for manager", () => {
             const manager = new Manager ("Jon Snow", 6, "jsnow@thewall.com", 22);
 
             expect(manager.getRole()).toEqual("Manager");
