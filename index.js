@@ -6,46 +6,55 @@ const Employee = require('./lib/Employee');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const Manager = require('./lib/Manager');
-const { validate } = require("jest-validate");
+
+//import html
+const addManagerCard = require('./src/manager-card');
+const addEngineerCard = require('./src/engineer-card');
+const addInternCard = require('./src/intern-card');
+const makeProfileCards = require('./src/card-index');
+
+
 
 //Team Member Arrays
 const team = [];
 
 //manager prompts
 const promptManager = [
-    {
-        name: 'role',
-        type: 'confirm',
-        message: "Hello, and welcome to Team Profile Generator. "
-    },
-
+    
     {
         name:'name',
         type:'input',
         message: "Enter Team Manager Name:",
-        validate: isValidString
+        
     },
 
     {
         name: 'id',
         type:'input',
         message:"Enter Employee ID:",
-        validate: isValidString
+        
     },
 
     {
         name: 'email',
         type:'input',
-        message: "Please provide your email address:",
-        validate: isValidString
+        message: "Please Provide Manger Email Address:",
+        
     },
 
     {
         name:'officeNumber',
         type:'input',
         message:"Enter Office Number:",
-        validate: isValidString
+        
     },
+
+    {
+        name: 'nextMember',
+        type: 'list',
+        choices: ['Add Engineer', 'Add Intern', 'That is my Team!'],
+        message: 'What would you like to do next?',
+      },
 
 ];
 
@@ -55,28 +64,34 @@ const promptEngineer = [
         name: 'name',
         type: 'input',
         message: "Enter Engineer Name:",
-        validate: isValidString
+        
       },
 
       {
         name: 'id',
         type: 'input',
         message: "Enter Engineer ID number:",
-        validate: isValidString
+        
       },
 
       {
         name: 'email',
         type: 'input',
-        message: "Please Provide Engineer ID Number:",
-        validate: isValidEmail
+        message: "Enter Engineer Email Address:"
       },
 
       {
-        name: 'github',
+        name: 'gitHub',
         type: 'input',
         message: "Please Provide Engineer's Github UserName:",
-        validate: isValidString
+        
+      },
+
+      {
+        name: 'nextMember',
+        type: 'list',
+        choices: ['Add Engineer', 'Add Intern', 'That is my Team!'],
+        message: 'What would you like to do next?',
       },
 ];
 
@@ -86,28 +101,112 @@ const promptIntern = [
         name: 'name',
         type: 'input',
         message: "Enter Intern Name:",
-        validate: isValidString
+        
     },
 
     {
       name: 'id',
       type: 'input',
       message: "Enter Intern ID Number:",
-      validate: isValidString
+      
     },
 
     {
       name: 'email',
       type: 'input',
       message: "Enter Intern Email Address:",
-      validate: isValidEmail
+      
     },
 
     {
       name: 'school',
       type: 'input',
       message: "Enter Intern's Educational Institute:",
-      validate: isValidString
+      
     },
+
+    {
+        name: 'nextMember',
+        type: 'list',
+        choices: ['Add Engineer', 'Add Intern', 'That is my Team!'],
+        message: 'What would you like to do next?',
+      },
 ];
 
+//Initialize App
+ask(promptManager);
+
+function ask(teamArr) {
+    inquirer
+        .prompt(teamArr)
+        .then((teamMember) => {
+            team.push(teamMember);
+
+            if(teamMember.nextMember === 'Add Engineer') {
+                ask(promptEngineer);
+            } else if (teamMember.nextMember === 'Add Intern') {
+               ask(promptIntern);
+            } else {
+                createProfiles(team);
+            }
+        })
+        .catch((err) => console.log(err));
+}
+
+//function to create team
+function createProfiles(team) {
+
+    const profiles = team.map((teamMember) => {
+        const { name, id, email } = teamMember;
+
+        //if manager is being added to profile, give office number 
+        if(teamMember.hasOwnProperty('officeNumber')) {
+            const { officeNumber } = teamMember;
+            return new Manager (name, id, email, officeNumber);
+        }
+
+        //if engineer is being added to profile, give github username
+        if(teamMember.hasOwnProperty('gitHub')) {
+            const { gitHub } = teamMember;
+            return new Engineer (name, id, email, gitHub);
+        }
+
+        //if intern is being added to to profile, give educational institute
+        if(teamMember.hasOwnProperty('school')) {
+            const { school } = teamMember;
+            return new Intern (name, id, email, school);
+        }
+
+    });
+
+   
+    generateHtml(profiles);
+}
+ //generate html
+function generateHtml(profiles) {
+    let profileCards = '';
+    profiles.forEach((profile) => {
+        if (profile instanceof Manager) {
+            const card = addManagerCard(profile);
+            profileCards += card;
+        } else if (profile instanceof Engineer) {
+            const card = addEngineerCard (profile);
+            profileCards += card;
+        } else if (profile instanceof Intern) {
+            const card = addInternCard(profile);
+            profileCards += card;
+        }
+    })
+
+    const newHtml = makeProfileCards(profileCards);
+
+    writeHtml(newHtml);
+};
+
+//write html in dist folder
+function writeHtml(newHtml) {
+    fs.writeFile('./dist/team-profile.html', newHtml, (err) => {
+        if (err) throw err;
+        console.log('HTML document has been created and can be viewed in the /dist folder.')
+    });
+};
