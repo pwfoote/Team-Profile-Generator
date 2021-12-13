@@ -37,6 +37,7 @@ describe("Manager", () => {
             const manager = new Manager ("Jon Snow", 6, "jsnow@thewall.com", 22);
 
             expect(manager.getEmail()).toEqual("jsnow@thewall.com");
+            
         });
     });
 
@@ -56,3 +57,4 @@ describe("Manager", () => {
         });
     });
 });
+
