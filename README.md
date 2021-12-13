@@ -18,10 +18,11 @@ This application was created to generate a team profile based on user input usin
 The user should clone the repository from GitHub and download Node. This application also requires a file system (fs) and inquirer module. For testing purposes, this application uses Jest. 
 
 ## Usage 
-Use inquirer from your command line to answer questions about your team members.
+Use inquirer from your command line to answer questions about your team members.</br>
 View walk through video here - [Screencastify](https://drive.google.com/file/d/135gPxdKob-fbagGz3DBwLtpvOg3IG8u0/view?usp=sharing)<br>
 <img src=".assets/images.pro-gen.gif">
-
+</br>
+[AppGif](https://github.com/pwfoote/Team-Profile-Generator/blob/main/assets/images/pro-gen.gif)</br>
 ## License 
 This project uses the MIT license.
 
@@ -31,7 +32,8 @@ Contributors should read the installation section.
 ## Tests
 Run `npm test` to run Jest for tests on constructors. 
 </br>
-HTML example file is located in .assets/html-sample/team-profile-sample.html
+</br>
+**HTML example file is located in .assets/html-sample/team-profile-sample.html
 
 ## Questions
 If there are are any questions you can contact me at prestonfoote214@gmail.com 
